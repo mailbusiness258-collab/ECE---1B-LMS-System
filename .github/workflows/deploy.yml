@@ -1,4 +1,5 @@
-name: Deploy Vite app to GitHub Pages
+- name: Install dependencies
+  run: npm install --legacy-peer-deps
 
 on:
   push:
