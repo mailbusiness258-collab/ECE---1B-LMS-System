@@ -6,6 +6,7 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
+    base: '/ECE---1B-LMS-System/', 
     plugins: [
       react(),
       tailwindcss(),
@@ -42,5 +43,5 @@ export default defineConfig(() => {
     },
   };
 });
-base: '/ECE---1B-LMS-System/',
+
   
