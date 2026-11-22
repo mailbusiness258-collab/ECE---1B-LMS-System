@@ -1,5 +1,4 @@
-- name: Install dependencies
-  run: npm install --legacy-peer-deps
+name: Deploy Vite app to GitHub Pages
 
 on:
   push:
@@ -26,7 +25,7 @@ jobs:
         with:
           node-version: 20
       - name: Install dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
       - name: Build
         run: npm run build
       - name: Setup Pages
