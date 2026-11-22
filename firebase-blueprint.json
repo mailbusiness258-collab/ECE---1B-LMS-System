@@ -1,0 +1,305 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Private authenticated student or officer account details and ID card settings.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "email": { "type": "string", "format": "email", "maxLength": 200 },
+        "fullName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "handle": { "type": "string", "minLength": 1, "maxLength": 40 },
+        "studentId": { "type": "string", "maxLength": 40 },
+        "birthday": { "type": "string", "maxLength": 40 },
+        "enrollmentType": { "type": "string", "enum": ["Regular", "Irregular"] },
+        "avatarId": { "type": "string", "maxLength": 64 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "fullName", "handle", "enrollmentType", "avatarId", "createdAt", "updatedAt"]
+    },
+    "RosterMember": {
+      "title": "RosterMember",
+      "description": "Public ECE 1B class directory entry without sensitive PII.",
+      "type": "object",
+      "properties": {
+        "fullName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "handle": { "type": "string", "maxLength": 40 },
+        "studentId": { "type": "string", "maxLength": 40 },
+        "roleLabel": { "type": "string", "enum": ["Officer", "Student"] },
+        "officerTitle": { "type": "string", "maxLength": 80 },
+        "enrollmentType": { "type": "string", "enum": ["Regular", "Irregular"] },
+        "birthdayDisplay": { "type": "string", "maxLength": 40 },
+        "avatarId": { "type": "string", "maxLength": 64 },
+        "linkedUid": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["fullName", "roleLabel", "enrollmentType", "avatarId", "createdAt", "updatedAt"]
+    },
+    "AdminRecord": {
+      "title": "AdminRecord",
+      "description": "Authorized ECE 1B class officer or administrator account.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "email": { "type": "string", "format": "email", "maxLength": 200 },
+        "fullName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "title": { "type": "string", "maxLength": 80 },
+        "inviteId": { "type": "string", "maxLength": 128 },
+        "addedBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "fullName", "title", "addedBy", "createdAt"]
+    },
+    "OfficerInvite": {
+      "title": "OfficerInvite",
+      "description": "Pre-authorized co-officer email invite created by an existing admin.",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "format": "email", "maxLength": 200 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "invitedBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["email", "title", "invitedBy", "createdAt"]
+    },
+    "Announcement": {
+      "title": "Announcement",
+      "description": "Class announcement or reminder published by ECE 1B officers.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "body": { "type": "string", "minLength": 1, "maxLength": 4000 },
+        "category": { "type": "string", "enum": ["General", "Exam", "Urgent", "Event"] },
+        "pinned": { "type": "boolean" },
+        "authorUid": { "type": "string", "maxLength": 128 },
+        "authorName": { "type": "string", "maxLength": 120 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "body", "category", "pinned", "authorUid", "authorName", "createdAt", "updatedAt"]
+    },
+    "ClassTask": {
+      "title": "ClassTask",
+      "description": "Assignment, deadline, lab submission, or expected quiz.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "minLength": 1, "maxLength": 180 },
+        "subject": { "type": "string", "minLength": 1, "maxLength": 40 },
+        "type": { "type": "string", "enum": ["Quiz", "Assignment", "Exam", "Requirement"] },
+        "description": { "type": "string", "maxLength": 2000 },
+        "dueAt": { "type": "string", "format": "date-time" },
+        "authorUid": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "subject", "type", "description", "dueAt", "authorUid", "createdAt", "updatedAt"]
+    },
+    "TaskProgress": {
+      "title": "TaskProgress",
+      "description": "Student completion status for a specific class task.",
+      "type": "object",
+      "properties": {
+        "taskId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "completed": { "type": "boolean" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["taskId", "completed", "updatedAt"]
+    },
+    "ScheduleSlot": {
+      "title": "ScheduleSlot",
+      "description": "Weekly ECE 1B class schedule entry.",
+      "type": "object",
+      "properties": {
+        "day": { "type": "string", "enum": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] },
+        "courseCode": { "type": "string", "minLength": 1, "maxLength": 30 },
+        "courseTitle": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "startTime": { "type": "string", "minLength": 1, "maxLength": 20 },
+        "endTime": { "type": "string", "minLength": 1, "maxLength": 20 },
+        "sortMinutes": { "type": "integer" },
+        "room": { "type": "string", "maxLength": 60 },
+        "instructor": { "type": "string", "maxLength": 100 },
+        "kind": { "type": "string", "enum": ["Lecture", "Lab"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["day", "courseCode", "courseTitle", "startTime", "endTime", "sortMinutes", "room", "instructor", "kind", "createdAt", "updatedAt"]
+    },
+    "StudyChapter": {
+      "title": "StudyChapter",
+      "description": "Organized chapter or unit within an ECE 1B subject containing materials, flashcards, and quizzes.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "subject": { "type": "string", "minLength": 1, "maxLength": 40 },
+        "order": { "type": "integer" },
+        "description": { "type": "string", "maxLength": 1000 },
+        "authorUid": { "type": "string", "maxLength": 128 },
+        "authorName": { "type": "string", "maxLength": 120 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "subject", "order", "description", "authorUid", "authorName", "createdAt", "updatedAt"]
+    },
+    "StudyMaterial": {
+      "title": "StudyMaterial",
+      "description": "Uploaded PDF exam, lecture deck, reviewer, links, images, and study notes organized by chapter.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "minLength": 1, "maxLength": 180 },
+        "subject": { "type": "string", "minLength": 1, "maxLength": 40 },
+        "chapterId": { "type": "string", "maxLength": 128 },
+        "category": { "type": "string", "enum": ["Exam PDF", "Reviewer", "Lecture Slides", "Lab Manual", "Notes"] },
+        "description": { "type": "string", "maxLength": 2000 },
+        "contentBody": { "type": "string", "maxLength": 20000 },
+        "links": { "type": "array" },
+        "images": { "type": "array" },
+        "fileName": { "type": "string", "maxLength": 200 },
+        "fileUrl": { "type": "string", "maxLength": 500 },
+        "mimeType": { "type": "string", "maxLength": 100 },
+        "extractedSummary": { "type": "string", "maxLength": 4000 },
+        "linkedQuizId": { "type": "string", "maxLength": 128 },
+        "authorUid": { "type": "string", "maxLength": 128 },
+        "authorName": { "type": "string", "maxLength": 120 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "subject", "chapterId", "category", "description", "contentBody", "links", "images", "fileName", "fileUrl", "mimeType", "extractedSummary", "linkedQuizId", "authorUid", "authorName", "createdAt", "updatedAt"]
+    },
+    "FlashcardDeck": {
+      "title": "FlashcardDeck",
+      "description": "Interactive study flashcard deck with editable front/back terms organized by chapter.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "minLength": 1, "maxLength": 180 },
+        "subject": { "type": "string", "minLength": 1, "maxLength": 40 },
+        "chapterId": { "type": "string", "maxLength": 128 },
+        "description": { "type": "string", "maxLength": 1000 },
+        "cards": { "type": "array" },
+        "cardCount": { "type": "integer" },
+        "authorUid": { "type": "string", "maxLength": 128 },
+        "authorName": { "type": "string", "maxLength": 120 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "subject", "chapterId", "description", "cards", "cardCount", "authorUid", "authorName", "createdAt", "updatedAt"]
+    },
+    "InteractiveQuiz": {
+      "title": "InteractiveQuiz",
+      "description": "Interactive quiz converted from PDF or created manually with multiple question types.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "minLength": 1, "maxLength": 180 },
+        "subject": { "type": "string", "minLength": 1, "maxLength": 40 },
+        "chapterId": { "type": "string", "maxLength": 128 },
+        "description": { "type": "string", "maxLength": 2000 },
+        "sourceMaterialId": { "type": "string", "maxLength": 128 },
+        "published": { "type": "boolean" },
+        "timeLimitMinutes": { "type": "integer" },
+        "questions": { "type": "array" },
+        "questionCount": { "type": "integer" },
+        "totalPoints": { "type": "integer" },
+        "authorUid": { "type": "string", "maxLength": 128 },
+        "authorName": { "type": "string", "maxLength": 120 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "subject", "chapterId", "description", "sourceMaterialId", "published", "timeLimitMinutes", "questions", "questionCount", "totalPoints", "authorUid", "authorName", "createdAt", "updatedAt"]
+    },
+    "QuizAttempt": {
+      "title": "QuizAttempt",
+      "description": "Student quiz submission record including auto-graded and essay responses.",
+      "type": "object",
+      "properties": {
+        "quizId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "quizTitle": { "type": "string", "minLength": 1, "maxLength": 180 },
+        "subject": { "type": "string", "minLength": 1, "maxLength": 40 },
+        "studentUid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "studentName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "answers": { "type": "object" },
+        "autoScore": { "type": "number" },
+        "maxAutoScore": { "type": "number" },
+        "totalPoints": { "type": "number" },
+        "essayPendingCount": { "type": "integer" },
+        "essayFeedback": { "type": "object" },
+        "status": { "type": "string", "enum": ["submitted", "graded"] },
+        "submittedAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["quizId", "quizTitle", "subject", "studentUid", "studentName", "answers", "autoScore", "maxAutoScore", "totalPoints", "essayPendingCount", "essayFeedback", "status", "submittedAt", "updatedAt"]
+    },
+    "KioskLink": {
+      "title": "KioskLink",
+      "description": "Quick portal or external resource link on the Kiosk tab.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "subtitle": { "type": "string", "maxLength": 200 },
+        "url": { "type": "string", "minLength": 8, "maxLength": 500, "pattern": "^https?://.+" },
+        "category": { "type": "string", "enum": ["Portal", "Drive", "Reference", "Tools"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "subtitle", "url", "category", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{uid}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Private user account documents keyed by Firebase Auth UID."
+    },
+    "/users/{uid}/taskProgress/{taskId}": {
+      "schema": { "$ref": "#/entities/TaskProgress" },
+      "description": "Per-student task completion progress linked to /tasks/{taskId}."
+    },
+    "/roster/{studentDocId}": {
+      "schema": { "$ref": "#/entities/RosterMember" },
+      "description": "Public ECE 1B class roster excluding private PII."
+    },
+    "/admins/{uid}": {
+      "schema": { "$ref": "#/entities/AdminRecord" },
+      "description": "Canonical admin/officer privileges keyed by Firebase Auth UID."
+    },
+    "/officerInvites/{inviteId}": {
+      "schema": { "$ref": "#/entities/OfficerInvite" },
+      "description": "Pre-authorized co-officer email invites."
+    },
+    "/announcements/{announcementId}": {
+      "schema": { "$ref": "#/entities/Announcement" },
+      "description": "Class announcements posted by officers."
+    },
+    "/tasks/{taskId}": {
+      "schema": { "$ref": "#/entities/ClassTask" },
+      "description": "Assignments, deadlines, and expected quizzes."
+    },
+    "/scheduleSlots/{slotId}": {
+      "schema": { "$ref": "#/entities/ScheduleSlot" },
+      "description": "Weekly ECE 1B class schedule entries."
+    },
+    "/chapters/{chapterId}": {
+      "schema": { "$ref": "#/entities/StudyChapter" },
+      "description": "Subject chapters/units organizing study materials, flashcards, and quizzes."
+    },
+    "/materials/{materialId}": {
+      "schema": { "$ref": "#/entities/StudyMaterial" },
+      "description": "Uploaded study materials, PDF exams, images, links, and reviewers."
+    },
+    "/flashcardDecks/{deckId}": {
+      "schema": { "$ref": "#/entities/FlashcardDeck" },
+      "description": "Interactive flashcard decks organized per subject and chapter."
+    },
+    "/quizzes/{quizId}": {
+      "schema": { "$ref": "#/entities/InteractiveQuiz" },
+      "description": "Interactive quizzes generated from materials or built manually."
+    },
+    "/quizAttempts/{attemptId}": {
+      "schema": { "$ref": "#/entities/QuizAttempt" },
+      "description": "Student quiz submissions and grading results."
+    },
+    "/kioskLinks/{linkId}": {
+      "schema": { "$ref": "#/entities/KioskLink" },
+      "description": "Quick class links and academic tools."
+    }
+  }
+}

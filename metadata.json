@@ -1,0 +1,6 @@
+{
+  "name": "ECE 1B Class Portal",
+  "description": "Class portal for ECE 1B featuring study materials, schedules, student directory, task deadlines, and AI-powered PDF-to-quiz conversion.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
