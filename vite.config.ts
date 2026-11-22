@@ -42,3 +42,4 @@ export default defineConfig(() => {
     },
   };
 });
+base: '/ECE---1B-LMS-System/', inside defineConfig({ ... })
